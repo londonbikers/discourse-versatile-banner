@@ -237,4 +237,42 @@ export default {
                     if (settings.first_column_content) {
                         columns.push(
                             h("div.first_column.single-box", [
-                                this.attach("banner-column-icon",
+                                this.attach("banner-column-icon", { column: 0 }),
+                                h("div", { innerHTML: settings.first_column_content }),
+                            ])
+                        );
+                    }
+
+                    if (settings.second_column_content) {
+                        columns.push(
+                            h("div.second_column.single-box", [
+                                this.attach("banner-column-icon", { column: 1 }),
+                                h("div", { innerHTML: settings.second_column_content }),
+                            ])
+                        );
+                    }
+
+                    if (settings.third_column_content) {
+                        columns.push(
+                            h("div.third_column.single-box", [
+                                this.attach("banner-column-icon", { column: 2 }),
+                                h("div", { innerHTML: settings.third_column_content }),
+                            ])
+                        );
+                    }
+
+                    if (settings.fourth_column_content) {
+                        columns.push(
+                            h("div.fourth_column.single-box", [
+                                this.attach("banner-column-icon", { column: 3 }),
+                                h("div", { innerHTML: settings.fourth_column_content }),
+                            ])
+                        );
+                    }
+
+                    return h("div.row", columns);
+                },
+            });
+        });
+    },
+};
