@@ -9,6 +9,28 @@ export default {
 
     initialize() {
         withPluginApi("0.8.18", (api) => {
+            //
+            // 🔹 Navigate to custom login URL
+            //
+            function NavigateToCustomLoginUrl(provider) {
+                const idp_base_url = "https://accounts.londonbikers.com/account";
+                const sp_return_url = `https://londonbikers.com/session/sso?return_path=${window.location.pathname}`;
+
+                let idp_url;
+                if (provider === "Local") {
+                    idp_url = `${idp_base_url}/register?returnurl=${sp_return_url}`;
+                } else {
+                    idp_url = `${idp_base_url}/externalloginremote?provider=${provider}&returnurl=${sp_return_url}`;
+                }
+
+                console.log("Redirecting to:", idp_url);
+                window.location.assign(idp_url);
+            }
+
+            //
+            // 🔹 Banner widgets (unchanged from before)
+            //
+
             let columnIcons = [
                 settings.first_column_icon,
                 settings.second_column_icon,
@@ -56,26 +78,6 @@ export default {
                 }
             }
 
-            //
-            // 🔹 Your custom login function
-            //
-            function NavigateToCustomLoginUrl(provider) {
-                const idp_base_url = "https://accounts.londonbikers.com/account";
-                const sp_return_url = `https://londonbikers.com/session/sso?return_path=${window.location.pathname}`;
-
-                let idp_url;
-                if (provider === "Local") {
-                    idp_url = `${idp_base_url}/register?returnurl=${sp_return_url}`;
-                } else {
-                    idp_url = `${idp_base_url}/externalloginremote?provider=${provider}&returnurl=${sp_return_url}`;
-                }
-
-                window.location.assign(idp_url);
-            }
-
-            //
-            // 🔹 Widgets
-            //
             api.createWidget("banner-box-widget", {
                 tagName: "div.banner-box",
                 html() {
@@ -111,31 +113,36 @@ export default {
                 },
             });
 
+            //
+            // 🔹 Attach login button handlers with delegation
+            //
             api.decorateWidget("banner-box-widget:after", (helper) => {
-                helper.widget.appEvents.on("page:changed", () => {
-                    const fb_btn = document.getElementById("banner-btn-fb");
-                    if (fb_btn) {
-                        fb_btn.addEventListener("click", () =>
-                            NavigateToCustomLoginUrl("Facebook")
-                        );
-                    }
+                helper.afterRender(() => {
+                    const container = document.querySelector(".banner-box");
+                    if (!container) return;
 
-                    const google_btn = document.getElementById("banner-btn-google");
-                    if (google_btn) {
-                        google_btn.addEventListener("click", () =>
-                            NavigateToCustomLoginUrl("Google")
+                    container.addEventListener("click", (e) => {
+                        const btn = e.target.closest(
+                            "#banner-btn-fb, #banner-btn-google, #banner-btn-local"
                         );
-                    }
+                        if (!btn) return;
 
-                    const local_btn = document.getElementById("banner-btn-local");
-                    if (local_btn) {
-                        local_btn.addEventListener("click", () =>
-                            NavigateToCustomLoginUrl("Local")
-                        );
-                    }
+                        e.preventDefault(); // stop submit-type buttons from interfering
+
+                        if (btn.id === "banner-btn-fb") {
+                            NavigateToCustomLoginUrl("Facebook");
+                        } else if (btn.id === "banner-btn-google") {
+                            NavigateToCustomLoginUrl("Google");
+                        } else if (btn.id === "banner-btn-local") {
+                            NavigateToCustomLoginUrl("Local");
+                        }
+                    });
                 });
             });
 
+            //
+            // 🔹 Other widgets unchanged
+            //
             api.createWidget("banner-button-container-widget", {
                 tagName: "div.button-container",
                 html() {
