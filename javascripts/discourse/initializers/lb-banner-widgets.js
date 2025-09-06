@@ -1,7 +1,7 @@
 ﻿import { withPluginApi } from "discourse/lib/plugin-api";
 import { iconNode, convertIconClass } from "discourse-common/lib/icon-library";
 import cookie, { removeCookie } from "discourse/lib/cookie";
-import h from "virtual-dom/h";
+import { h } from "virtual-dom";
 import moment from "moment";
 
 export default {
