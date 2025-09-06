@@ -116,27 +116,25 @@ export default {
             //
             // 🔹 Attach login button handlers with delegation
             //
-            api.decorateWidget("banner-box-widget:after", (helper) => {
-                helper.afterRender(() => {
-                    const container = document.querySelector(".banner-box");
-                    if (!container) return;
+            api.decorateWidget("banner-box-widget:after", () => {
+                const container = document.querySelector(".banner-box");
+                if (!container) return;
 
-                    container.addEventListener("click", (e) => {
-                        const btn = e.target.closest(
-                            "#banner-btn-fb, #banner-btn-google, #banner-btn-local"
-                        );
-                        if (!btn) return;
+                container.addEventListener("click", (e) => {
+                    const btn = e.target.closest(
+                        "#banner-btn-fb, #banner-btn-google, #banner-btn-local"
+                    );
+                    if (!btn) return;
 
-                        e.preventDefault(); // stop submit-type buttons from interfering
+                    e.preventDefault(); // stop submit-type buttons from interfering
 
-                        if (btn.id === "banner-btn-fb") {
-                            NavigateToCustomLoginUrl("Facebook");
-                        } else if (btn.id === "banner-btn-google") {
-                            NavigateToCustomLoginUrl("Google");
-                        } else if (btn.id === "banner-btn-local") {
-                            NavigateToCustomLoginUrl("Local");
-                        }
-                    });
+                    if (btn.id === "banner-btn-fb") {
+                        NavigateToCustomLoginUrl("Facebook");
+                    } else if (btn.id === "banner-btn-google") {
+                        NavigateToCustomLoginUrl("Google");
+                    } else if (btn.id === "banner-btn-local") {
+                        NavigateToCustomLoginUrl("Local");
+                    }
                 });
             });
 
